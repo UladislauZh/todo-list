@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { Todolist } from "./components/Todolist/Todolist";
 
-function App() {
-  const [count, setCount] = useState(0)
+export type PropsTasksType = {
+  //***
+  id: number;
+  title: string;
+  isDone: boolean;
+};
+
+export const App = () => {
+  const [tasks, setTasks] = useState<PropsTasksType[]>([
+    //***
+    { id: 1, title: "HTML&CSS", isDone: true },
+    { id: 2, title: "JS", isDone: true },
+    { id: 3, title: "ReactJS", isDone: false },
+    { id: 4, title: "Redux", isDone: false },
+  ]);
+
+  const deleteTasks = (id: number) => {
+    const filteredTasks = tasks.filter((task) => {
+      return task.id !== id;
+    });
+    setTasks(filteredTasks);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+    <div className='app'>
+      <Todolist
+        title='My Todo-List'
+        tasks={tasks}
+        date='05.01.2025'
+        deleteTask={deleteTasks}
+      />
+    </div>
+  );
+};
