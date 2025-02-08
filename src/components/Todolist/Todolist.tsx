@@ -1,67 +1,64 @@
 import { useState } from "react";
+import { FilterValues, Task } from "../../App";
 import { Button } from "../Button/Button";
-import classes from "./Todolist.module.css";
-import { PropsTasksType } from "../../App";
 
 type PropsTodolistType = {
   title: string;
-  tasks: PropsTasksType[]; //***
-  date: string;
-  deleteTask: (id: number) => void;
+  tasks: Task[];
+  deleteTask: (taskId: string) => void;
+  changeFilter: (filter: FilterValues) => void;
+  createTask: (title: string) => void;
 };
 
 export const Todolist = ({
   title,
   tasks,
-  date,
   deleteTask,
+  changeFilter,
+  createTask,
 }: PropsTodolistType) => {
-  const [inputArea, setInputArea] = useState("");
+  //контролируемый инпут
+  const [taskTitle, setTaskTitle] = useState("");
 
-  console.log(inputArea);
-
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setInputArea(e.target.value);
+  const createTaskHandler = () => {
+    createTask(taskTitle);
+    setTaskTitle("");
+  };
 
   return (
-    <div className={classes.divToDoList}>
-      <h1 className={classes.headerText}>{title}</h1>
-      <div className={classes.divWrapper}>
-        <textarea
-          className={classes.textareaLimit}
-          value={inputArea}
-          onChange={handleTextAreaChange}
-          name='todolist'
-          id='todolist'
+    <div>
+      <h3>{title}</h3>
+      <div>
+        <input
+          value={taskTitle}
+          onChange={(event) => {
+            setTaskTitle(event.currentTarget.value);
+          }}
+          onKeyDown={(event) => console.log(event.key)}
         />
-        <Button title='X' onClick={() => {}} />
+        <Button title='+' onClick={createTaskHandler} />
       </div>
+      {/* Проверка на таски */}
       {tasks.length === 0 ? (
-        <p className={classes.headerText}>None</p>
+        <p>No Tasks</p>
       ) : (
-        <ul className={classes.ulWrapper}>
-          {tasks.map((tasks) => {
+        <ul>
+          {/* Мапим таски на колво */}
+          {tasks.map((t) => {
             return (
-              <li className={classes.liNoDot} key={tasks.id}>
-                <span>{tasks.title}</span>
-                <input type='checkbox' checked={tasks.isDone} />
-                <Button
-                  onClick={() => {
-                    deleteTask(tasks.id);
-                  }}
-                  title='X'
-                />
+              <li key={t.id}>
+                <input type='checkbox' checked={t.isDone} /> <span>{t.title}</span>
+                <Button onClick={() => deleteTask(t.id)} title='X' />
               </li>
             );
           })}
         </ul>
       )}
-      <>
-        <Button title='All' onClick={() => {}} />
-        <Button title='All' onClick={() => {}} />
-        <Button title='All' onClick={() => {}} />
-      </>
-      <div>{date}</div>
+      <div>
+        <Button title='All' onClick={() => changeFilter("All")} />
+        <Button title='Active' onClick={() => changeFilter("Active")} />
+        <Button title='Completed' onClick={() => changeFilter("Completed")} />
+      </div>
     </div>
   );
 };
