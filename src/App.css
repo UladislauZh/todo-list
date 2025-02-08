@@ -40,3 +40,22 @@
 .read-the-docs {
   color: #888;
 }
+
+.error {
+  border: red 1px solid;
+}
+
+.error-message {
+  color: red;
+}
+
+.active-filter {
+  background-color: lightgreen;
+}
+
+.container {
+  /* border: 1px solid red;
+  border-radius: 15px; */
+  display: flex;
+  align-items: center;
+}
