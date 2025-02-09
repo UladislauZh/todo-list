@@ -1,6 +1,8 @@
-import { ChangeEvent, useState, KeyboardEvent } from "react";
+import { ChangeEvent } from "react";
 import { FilterValues, Task, Todolist } from "../../App";
 import { Button } from "../Button/Button";
+import { CreateItemForm } from "../CreateItem/CreateItemForm";
+import { EditableSpan } from "./EditableSpan";
 
 type PropsTodolistType = {
   todolist: Todolist;
@@ -10,6 +12,8 @@ type PropsTodolistType = {
   createTask: (todolistId: string, title: string) => void;
   changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
   deleteTodolist: (todolistId: string) => void;
+  changeTaskTitle: (todolistId: string, taskId: string, title: string) => void;
+  changeTodolistTitle: (todolistId: string, title: string) => void;
 };
 
 export const TodolistItem = ({
@@ -17,36 +21,12 @@ export const TodolistItem = ({
   tasks,
   deleteTask,
   changeFilter,
-  createTask,
   changeTaskStatus,
   deleteTodolist,
+  createTask,
+  changeTaskTitle,
+  changeTodolistTitle,
 }: PropsTodolistType) => {
-  //ошибка при создании пустой таски
-  const [error, setError] = useState<string | null>(null);
-  //контролируемый инпут
-  const [taskTitle, setTaskTitle] = useState("");
-
-  const createTaskHandler = () => {
-    const trimmedTitle = taskTitle.trim();
-    if (trimmedTitle !== "") {
-      createTask(id, trimmedTitle);
-      setTaskTitle("");
-    } else {
-      setError("Title is required");
-    }
-  };
-
-  const changeTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setTaskTitle(event.currentTarget.value);
-    setError(null);
-  };
-
-  const createTaskOnEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      createTaskHandler();
-    }
-  };
-
   const changeFilterHandler = (filter: FilterValues) => {
     changeFilter(id, filter);
   };
@@ -56,22 +36,24 @@ export const TodolistItem = ({
     deleteTodolist(id);
   };
 
+  //создание таски
+  const createTaskHandler = (title: string) => {
+    createTask(id, title);
+  };
+
+  const changeTodolistTitleHandler = (title: string) => {
+    changeTodolistTitle(id, title);
+  };
   return (
     <div>
       <div className='container'>
-        <h3>{title}</h3>
+        <h3>
+          <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
+        </h3>
         <Button title='X' onClick={deleteTodolistHandler} />
       </div>
-
       <div>
-        <input
-          className={error ? "error" : ""}
-          value={taskTitle}
-          onChange={changeTaskTitleHandler}
-          onKeyDown={createTaskOnEnterHandler}
-        />
-        <Button title='+' onClick={createTaskHandler} />
-        {error && <div className={"error-message"}>{error}</div>}
+        <CreateItemForm onCreateItem={createTaskHandler} />
       </div>
       {/* Проверка на таски */}
       {tasks.length === 0 ? (
@@ -89,11 +71,15 @@ export const TodolistItem = ({
               const newStatusValue = e.currentTarget.checked;
               changeTaskStatus(id, t.id, newStatusValue);
             };
+            // изменение таски
+            const changeTaskTitleHandler = (title: string) => {
+              changeTaskTitle(id, t.id, title);
+            };
 
             return (
               <li key={t.id}>
                 <input type='checkbox' checked={t.isDone} onChange={changeTaskStatusHandler} />
-                <span>{t.title}</span>
+                <EditableSpan value={t.title} onChange={changeTaskTitleHandler} />
                 <Button onClick={deleteTaskHandler} title='X' />
               </li>
             );
