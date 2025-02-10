@@ -11,22 +11,22 @@
   color: white;
 }
 
-.divWrapper {
+/* .divWrapper {
   display: flex;
   justify-content: space-around;
-}
+} */
 
-.textareaLimit {
+/* .textareaLimit {
   resize: none;
   max-width: 200px;
   border-radius: 5px;
   background-color: rgb(56, 56, 56);
-}
+} */
 
-.ulWrapper {
+/* .ulWrapper {
   text-align: center;
 }
 
 .liNoDot {
   list-style-type: none;
-}
+} */

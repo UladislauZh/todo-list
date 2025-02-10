@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import "./App.css";
 import { TodolistItem } from "./components/Todolist/TodolistItem";
 import { v1 } from "uuid";
 import { CreateItemForm } from "./components/CreateItem/CreateItemForm";
+import { createTodolistAC, todolistReducer } from "./model/todolists-reducer";
 
 export type Task = {
   id: string;
@@ -23,25 +24,11 @@ export type TasksState = {
 export type FilterValues = "All" | "Active" | "Completed";
 
 export const App = () => {
-  const todolistId1 = v1();
-  const todolistId2 = v1();
+  dispatch({ type: "increment" });
 
-  const [todolists, setTodolists] = useState<Todolist[]>([
-    { id: todolistId1, title: "What to learn", filter: "All" },
-    { id: todolistId2, title: "What to buy", filter: "All" },
-  ]);
+  const [todolists, dispatchToTodolists] = useReducer(todolistReducer, []);
 
-  const [tasks, setTasks] = useState<TasksState>({
-    [todolistId1]: [
-      { id: v1(), title: "HTML&CSS", isDone: true },
-      { id: v1(), title: "JS", isDone: true },
-      { id: v1(), title: "ReactJS", isDone: false },
-    ],
-    [todolistId2]: [
-      { id: v1(), title: "Rest API", isDone: true },
-      { id: v1(), title: "GraphQL", isDone: false },
-    ],
-  });
+  const [tasks, setTasks] = useState<TasksState>({});
 
   //Удаление таски 1 вариант
   const deleteTask = (todolistId: string, taskId: string) => {
@@ -96,10 +83,13 @@ export const App = () => {
   //создание тудушки
 
   const createTodolist = (title: string) => {
-    const todolistId = v1();
-    const newTodolist: Todolist = { id: todolistId, title, filter: "All" };
-    setTodolists([newTodolist, ...todolists]);
-    setTasks({ ...tasks, [todolistId]: [] });
+    const action = createTodolistAC(title);
+    dispatchToTodolists(action);
+    setTasks({ ...tasks, [action.payload.id]: [] });
+    // const todolistId = v1();
+    // const newTodolist: Todolist = { id: todolistId, title, filter: "All" };
+    // setTodolists([newTodolist, ...todolists]);
+    // setTasks({ ...tasks, [todolistId]: [] });
   };
 
   //изменение такси по клику
