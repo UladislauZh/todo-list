@@ -44,20 +44,20 @@ export const deleteTodolistAC = (id: string) => {
 
 export type DeleteTodolistAction = ReturnType<typeof deleteTodolistAC>;
 
-export const createTodolistAC = (id: string, title: string) => {
+export const createTodolistAC = (title: string, id: string) => {
   return { type: "create_todolist", payload: { id, title } } as const;
 };
 
 export type CreateTodolistAction = ReturnType<typeof createTodolistAC>;
 
-export const changeTodolistTitleAC = (id: string, title: string) => {
-  return { type: "change_todolist", payload: { id, title } } as const;
+export const changeTodolistTitleAC = (payload: { id: string; title: string }) => {
+  return { type: "change_todolist", payload } as const;
 };
 
 export type changeTodolistTitleAction = ReturnType<typeof changeTodolistTitleAC>;
 
-export const changeTodolistFilterAC = (id: string, filter: FilterValues) => {
-  return { type: "change_filter_todolist", payload: { id, filter } } as const;
+export const changeTodolistFilterAC = (payload: { id: string; filter: FilterValues }) => {
+  return { type: "change_filter_todolist", payload } as const;
 };
 
 export type changeTodolistFilterAction = ReturnType<typeof changeTodolistFilterAC>;
