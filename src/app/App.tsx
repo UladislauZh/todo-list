@@ -1,23 +1,23 @@
-import { useReducer } from "react";
 import "./App.css";
-import { v1 } from "uuid";
 import {
   changeTodolistFilterAC,
   changeTodolistTitleAC,
   createTodolistAC,
   deleteTodolistAC,
-  todolistsReducer,
 } from "../../src/model/todolists-reducer";
 import {
   changeTaskStatusAC,
   changeTaskTitleAC,
   createTaskAC,
   deleteTaskAC,
-  tasksReducer,
 } from "../../src/model/tasks-reducer";
 import { CreateItemForm } from "../components/CreateItem/CreateItemForm";
 import { TodolistItem } from "../components/Todolist/TodolistItem";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../common/hooks/useAppSelector";
+import { useAppDispatch } from "../common/hooks/useAppDispatch";
+
+import { selectTodolists } from "../model/todolists-selectors";
+import { selectTasks } from "../model/tasks-selectors";
 
 export type Task = {
   id: string;
@@ -40,84 +40,41 @@ export type FilterValues = "All" | "Active" | "Completed";
 export const App = () => {
   // dispatch({ type: "increment" });
 
-  const todolists = useSelector(todolistsReducer, []);
+  const todolists = useAppSelector(selectTodolists);
+  const tasks = useAppSelector(selectTasks);
 
-  const [tasks, dispatchTasks] = useSelector(tasksReducer, {});
+  const dispatch = useAppDispatch();
 
-  //Удаление таски 1 вариант
   const deleteTask = (todolistId: string, taskId: string) => {
-    const action = deleteTaskAC(taskId, todolistId);
-    dispatchTasks(action);
+    dispatch(deleteTaskAC(taskId, todolistId));
   };
-
-  //Фильтрация тасок
 
   const changeFilter = (todolistId: string, filter: FilterValues) => {
-    dispatchToTodolists(changeTodolistFilterAC({ id: todolistId, filter }));
+    dispatch(changeTodolistFilterAC({ id: todolistId, filter }));
   };
-
-  //создание таски 2 вариант
 
   const createTask = (todolistId: string, title: string) => {
-    // const newTask = { id: v1(), title, isDone: false };
-    // const newTasks = { ...tasks, [todolistId]: [newTask, ...tasks[todolistId]] };
-    // setTasks(newTasks);
-    const action = createTaskAC(todolistId, title);
-    dispatchTasks(action);
+    dispatch(createTaskAC(todolistId, title));
   };
-
-  //статус таски 3 вариант
 
   const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-    // setTasks({
-    //   ...tasks,
-    //   [todolistId]: tasks[todolistId].map((task) =>
-    //     task.id == taskId ? { ...task, isDone } : task
-    //   ),
-    // });
-    const action = changeTaskStatusAC(todolistId, taskId, isDone);
-    dispatchTasks(action);
+    dispatch(changeTaskStatusAC(todolistId, taskId, isDone));
   };
-
-  //удаление тудушки
 
   const deleteTodolist = (todolistId: string) => {
-    const action = deleteTodolistAC(todolistId);
-    dispatchToTodolists(action);
-    delete tasks[todolistId];
-    dispatchTasks(action);
+    dispatch(deleteTodolistAC({ id: todolistId }));
   };
-
-  //создание тудушки
 
   const createTodolist = (title: string) => {
-    const todolistId = v1();
-    const action = createTodolistAC(title, todolistId);
-    dispatchToTodolists(action);
-    dispatchTasks(action);
+    dispatch(createTodolistAC(title));
   };
-
-  //изменение такси по клику
 
   const changeTaskTitle = (todolistId: string, taskId: string, title: string) => {
-    // setTasks({
-    //   ...tasks,
-    //   [todolistId]: tasks[todolistId].map((task) =>
-    //     task.id === taskId ? { ...task, title } : task
-    //   ),
-    // });
-
-    const action = changeTaskTitleAC(todolistId, taskId, title);
-    dispatchTasks(action);
+    dispatch(changeTaskTitleAC(todolistId, taskId, title));
   };
 
-  //изменение тудулист
-
   const changeTodolistTitle = (todolistId: string, title: string) => {
-    dispatchToTodolists(changeTodolistTitleAC({ id: todolistId, title }));
-    // setTodolists(
-    //   todolists.map((todolist) => (todolist.id === todolistId ? { ...todolist, title } : todolist))
-    // );
+    dispatch(changeTodolistTitleAC({ id: todolistId, title }));
   };
 
   return (
