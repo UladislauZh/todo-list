@@ -1,22 +1,23 @@
 import { useReducer } from "react";
 import "./App.css";
-import { TodolistItem } from "./components/Todolist/TodolistItem";
 import { v1 } from "uuid";
-import { CreateItemForm } from "./components/CreateItem/CreateItemForm";
 import {
   changeTodolistFilterAC,
   changeTodolistTitleAC,
   createTodolistAC,
   deleteTodolistAC,
-  todolistReducer,
-} from "./model/todolists-reducer";
+  todolistsReducer,
+} from "../../src/model/todolists-reducer";
 import {
   changeTaskStatusAC,
   changeTaskTitleAC,
   createTaskAC,
   deleteTaskAC,
   tasksReducer,
-} from "./model/tasks-reducer";
+} from "../../src/model/tasks-reducer";
+import { CreateItemForm } from "../components/CreateItem/CreateItemForm";
+import { TodolistItem } from "../components/Todolist/TodolistItem";
+import { useSelector } from "react-redux";
 
 export type Task = {
   id: string;
@@ -37,37 +38,14 @@ export type TasksState = {
 export type FilterValues = "All" | "Active" | "Completed";
 
 export const App = () => {
-  const todolistId1 = v1();
-  const todolistId2 = v1();
   // dispatch({ type: "increment" });
 
-  const [todolists, dispatchToTodolists] = useReducer(todolistReducer, [
-    { id: todolistId1, title: "What to learn", filter: "All" },
-    { id: todolistId2, title: "What to buy", filter: "All" },
-  ]);
+  const todolists = useSelector(todolistsReducer, []);
 
-  const [tasks, dispatchTasks] = useReducer(tasksReducer, {
-    [todolistId1]: [
-      { id: v1(), title: "HTML&CSS", isDone: true },
-      { id: v1(), title: "JS", isDone: true },
-      { id: v1(), title: "ReactJS", isDone: false },
-    ],
-    [todolistId2]: [
-      { id: v1(), title: "Rest API", isDone: true },
-      { id: v1(), title: "GraphQL", isDone: false },
-    ],
-  });
+  const [tasks, dispatchTasks] = useSelector(tasksReducer, {});
 
   //Удаление таски 1 вариант
   const deleteTask = (todolistId: string, taskId: string) => {
-    // /** Берем таски тудулиста по его `id`: */
-    // const todolistTasks = tasks[todolistId];
-    // /** Удаляем нужную таску: */
-    // const newTodolistTasks = todolistTasks.filter((task) => task.id !== taskId);
-    // /** Перезаписываем массив тасок нужного тудулиста на новый (отфильтрованный): */
-    // tasks[todolistId] = newTodolistTasks;
-    // /** Устанавливаем в state копию объекта, чтобы React отреагировал перерисовкой: */
-    // setTasks({ ...tasks });
     const action = deleteTaskAC(taskId, todolistId);
     dispatchTasks(action);
   };

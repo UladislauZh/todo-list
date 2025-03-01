@@ -1,4 +1,4 @@
-import { FilterValues, Todolist } from "../App";
+import { FilterValues, Todolist } from "../app/App";
 
 const initialState: Todolist[] = [];
 
@@ -8,7 +8,7 @@ type Actions =
   | changeTodolistTitleAction
   | changeTodolistFilterAction;
 
-export const todolistReducer = (state: Todolist[] = initialState, action: Actions): Todolist[] => {
+export const todolistsReducer = (state: Todolist[] = initialState, action: Actions): Todolist[] => {
   switch (action.type) {
     case "delete_todolist": {
       return state.filter((todolist) => todolist.id !== action.payload.id); // логика удаления тудулиста

@@ -1,5 +1,5 @@
 import { v1 } from "uuid";
-import type { TasksState } from "../App";
+import type { TasksState } from "../app/App";
 
 const initialState: TasksState = {};
 
