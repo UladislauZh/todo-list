@@ -1,8 +1,8 @@
 import { ChangeEvent } from "react";
-import { FilterValues, Task, Todolist } from "../../App";
 import { Button } from "../Button/Button";
 import { CreateItemForm } from "../CreateItem/CreateItemForm";
 import { EditableSpan } from "./EditableSpan";
+import { FilterValues, Task, Todolist } from "../../app/App";
 
 type PropsTodolistType = {
   todolist: Todolist;
@@ -17,7 +17,7 @@ type PropsTodolistType = {
 };
 
 export const TodolistItem = ({
-  todolist: { title, filter, id },
+  todolist: { id, title, filter },
   tasks,
   deleteTask,
   changeFilter,
@@ -40,6 +40,7 @@ export const TodolistItem = ({
   const createTaskHandler = (title: string) => {
     createTask(id, title);
   };
+  // console.log("tasks", tasks);
 
   const changeTodolistTitleHandler = (title: string) => {
     changeTodolistTitle(id, title);
