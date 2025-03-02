@@ -16,17 +16,19 @@ type PropsTodolistType = {
   changeTodolistTitle: (todolistId: string, title: string) => void;
 };
 
-export const TodolistItem = ({
-  todolist: { id, title, filter },
-  tasks,
-  deleteTask,
-  changeFilter,
-  changeTaskStatus,
-  deleteTodolist,
-  createTask,
-  changeTaskTitle,
-  changeTodolistTitle,
-}: PropsTodolistType) => {
+export const TodolistItem = (props: PropsTodolistType) => {
+  const {
+    todolist: { id, title, filter },
+    tasks,
+    deleteTask,
+    changeFilter,
+    changeTaskStatus,
+    deleteTodolist,
+    createTask,
+    changeTaskTitle,
+    changeTodolistTitle,
+  } = props;
+
   const changeFilterHandler = (filter: FilterValues) => {
     changeFilter(id, filter);
   };
@@ -53,9 +55,7 @@ export const TodolistItem = ({
         </h3>
         <Button title='X' onClick={deleteTodolistHandler} />
       </div>
-      <div>
-        <CreateItemForm onCreateItem={createTaskHandler} />
-      </div>
+      <CreateItemForm onCreateItem={createTaskHandler} />
       {/* Проверка на таски */}
       {tasks.length === 0 ? (
         <p>No Tasks</p>
