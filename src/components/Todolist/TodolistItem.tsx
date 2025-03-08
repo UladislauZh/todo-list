@@ -1,8 +1,15 @@
 import { ChangeEvent } from "react";
-import { Button } from "../Button/Button";
 import { CreateItemForm } from "../CreateItem/CreateItemForm";
 import { EditableSpan } from "./EditableSpan";
 import { FilterValues, Task, Todolist } from "../../app/App";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import { containerSx, getListItemSx } from "./TodolistItem.styles";
+import Button from "@mui/material/Button";
+import { Checkbox } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 
 type PropsTodolistType = {
   todolist: Todolist;
@@ -53,14 +60,16 @@ export const TodolistItem = (props: PropsTodolistType) => {
         <h3>
           <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
         </h3>
-        <Button title='X' onClick={deleteTodolistHandler} />
+        <IconButton onClick={deleteTodolistHandler}>
+          <DeleteIcon />
+        </IconButton>
       </div>
       <CreateItemForm onCreateItem={createTaskHandler} />
       {/* Проверка на таски */}
       {tasks.length === 0 ? (
         <p>No Tasks</p>
       ) : (
-        <ul>
+        <List>
           {/* Мапим таски на колво */}
           {tasks.map((t) => {
             // Минирефакторинг удаления таски
@@ -78,32 +87,42 @@ export const TodolistItem = (props: PropsTodolistType) => {
             };
 
             return (
-              <li key={t.id}>
-                <input type='checkbox' checked={t.isDone} onChange={changeTaskStatusHandler} />
-                <EditableSpan value={t.title} onChange={changeTaskTitleHandler} />
-                <Button onClick={deleteTaskHandler} title='X' />
-              </li>
+              <ListItem key={t.id} sx={getListItemSx(t.isDone)}>
+                <div>
+                  <Checkbox checked={t.isDone} onChange={changeTaskStatusHandler} />
+                  <EditableSpan value={t.title} onChange={changeTaskTitleHandler} />
+                </div>
+                <IconButton onClick={deleteTaskHandler}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
             );
           })}
-        </ul>
+        </List>
       )}
-      <div>
+      <Box sx={containerSx}>
         <Button
-          className={filter === "All" ? "active-filter" : ""}
-          title='All'
+          variant={filter === "All" ? "outlined" : "text"}
+          color={"inherit"}
           onClick={() => changeFilterHandler("All")}
-        />
+        >
+          All
+        </Button>
         <Button
-          className={filter === "Active" ? "active-filter" : ""}
-          title='Active'
+          variant={filter === "Active" ? "outlined" : "text"}
+          color={"primary"}
           onClick={() => changeFilterHandler("Active")}
-        />
+        >
+          Active
+        </Button>
         <Button
-          className={filter === "Completed" ? "active-filter" : ""}
-          title='Completed'
+          variant={filter === "Completed" ? "outlined" : "text"}
+          color={"secondary"}
           onClick={() => changeFilterHandler("Completed")}
-        />
-      </div>
+        >
+          Completed
+        </Button>
+      </Box>
     </div>
   );
 };
