@@ -1,4 +1,4 @@
-import { FilterValues, Todolist } from "../app/App";
+import { FilterValues } from "../app/App";
 import { createAction, createReducer, nanoid } from "@reduxjs/toolkit";
 
 export const deleteTodolistAC = createAction<{ id: string }>("todolists/deleteTodolist");
@@ -40,6 +40,12 @@ export const todolistsReducer = createReducer(initialState, (builder) => {
       }
     });
 });
+
+export type Todolist = {
+  id: string;
+  title: string;
+  filter: FilterValues;
+};
 
 //State - данные, которые меняются в процессе взаимодействия с приложением.
 
