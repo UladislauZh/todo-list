@@ -1,34 +1,26 @@
-import { useAppDispatch } from "@/common/hooks/useAppDispatch"
-import { TodolistTitle } from "./TodolistTitle/TodolistTitle"
-import { Tasks } from "./Tasks/Tasks"
-import { FilterButtons } from "./FilterButtons/FilterButtons"
-import { Todolist } from "@/features/todolists/model/todolists-reducer"
-import { createTaskAC } from "@/features/todolists/model/tasks-reducer"
 import { CreateItemForm } from "@/common/components/CreateItemForm/CreateItemForm"
+import { useAddTaskMutation } from "@/features/todolists/api/tasksApi"
+import type { DomainTodolist } from "@/features/todolists/lib/types"
+import { FilterButtons } from "./FilterButtons/FilterButtons"
+import { Tasks } from "./Tasks/Tasks"
+import { TodolistTitle } from "./TodolistTitle/TodolistTitle"
 
-type PropsTodolistType = {
-  todolist: Todolist
+type Props = {
+  todolist: DomainTodolist
 }
 
-export const TodolistItem = ({ todolist }: PropsTodolistType) => {
-  const { id } = todolist
+export const TodolistItem = ({ todolist }: Props) => {
+  const [addTask] = useAddTaskMutation()
 
-  const dispatch = useAppDispatch()
-
-  //создание таски
   const createTask = (title: string) => {
-    dispatch(createTaskAC({ todolistId: id, title: title }))
+    addTask({ todolistId: todolist.id, title })
   }
-  // console.log("tasks", tasks);
 
   return (
     <div>
       <TodolistTitle todolist={todolist} />
-
-      <CreateItemForm onCreateItem={createTask} />
-
+      <CreateItemForm onCreateItem={createTask} disabled={todolist.entityStatus === "loading"} />
       <Tasks todolist={todolist} />
-
       <FilterButtons todolist={todolist} />
     </div>
   )

@@ -1,17 +1,18 @@
-import { TextField } from "@mui/material"
-import { ChangeEvent, useState } from "react"
+import TextField from "@mui/material/TextField"
+import { type ChangeEvent, useState } from "react"
 
 type Props = {
   value: string
   onChange: (title: string) => void
+  disabled?: boolean
 }
 
-export const EditableSpan = ({ value, onChange }: Props) => {
+export const EditableSpan = ({ value, onChange, disabled }: Props) => {
+  const [title, setTitle] = useState(value)
   const [isEditMode, setIsEditMode] = useState(false)
 
-  const [title, setTitle] = useState(value)
-
   const turnOnEditMode = () => {
+    if (disabled) return
     setIsEditMode(true)
   }
 

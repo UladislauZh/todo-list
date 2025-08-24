@@ -5,7 +5,9 @@ export type FieldError = {
 
 export type BaseResponse<T = {}> = {
   data: T
-  fieldsErrors: FieldError[]
-  messages: string
   resultCode: number
+  messages: string[]
+  fieldsErrors: FieldError[]
 }
+
+export type RequestStatus = "idle" | "loading" | "succeeded" | "failed"

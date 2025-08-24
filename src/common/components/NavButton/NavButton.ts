@@ -16,4 +16,3 @@ export const NavButton = styled(Button)<Props>(({ background, theme }) => ({
   color: theme.palette.primary.contrastText,
   background: background || theme.palette.primary.light,
 }))
-export { Button }
